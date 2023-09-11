@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* CSS styles here */
+        body {
+            background-color: #222;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 35px;
+        }
+        
+        .row {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .btn {
+            border: 2px solid #fff;
+            border-radius: 5px;
+            width: 75px;
+            height: 75px;
+            font-size: 50px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .btn:disabled {
+            color: #000;
+            cursor: not-allowed;
+        }
+        
+        .result-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #fff;
+            max-width: 200px;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .result {
+            color: #fff;
+            font-size: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+        }
+        
+        .reset {
+            text-align: center;
+        }
+        
+        .reset-button {
+            border: 2px solid #000;
+            cursor: pointer;
+            color: #000;
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 10px 20px;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        
+        .reset-button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+
+    <div class="container">
+        <div class="row">
+            <button class="btn" onclick="makeMove(0, 0)"></button>
+            <button class="btn" onclick="makeMove(0, 1)"></button>
+            <button class="btn" onclick="makeMove(0, 2)"></button>
+        </div>
+        <div class="row">
+            <button class="btn" onclick="makeMove(1, 0)"></button>
+            <button class="btn" onclick="makeMove(1, 1)"></button>
+            <button class="btn" onclick="makeMove(1, 2)"></button>
+        </div>
+        <div class="row">
+            <button class="btn" onclick="makeMove(2, 0)"></button>
+            <button class="btn" onclick="makeMove(2, 1)"></button>
+            <button class="btn" onclick="makeMove(2, 2)"></button>
+        </div>
+    </div>
+
+    <div class="result-container">
+        <p class="result">Player X's Turn</p>
+    </div>
+
+    <div class="reset">
+        <button class="reset-button" onclick="resetGame()">Reset</button>
+    </div>
+
+    <script>
+        // JavaScript code for the game logic here
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const winPatterns = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        const resultContainer = document.querySelector('.result');
+        const buttons = document.querySelectorAll('.btn');
+
+        function checkWinner() {
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    resultContainer.textContent = `Player ${currentPlayer} Wins!`;
+                    gameActive = false;
+                    return;
+                }
+            }
+            if (!gameBoard.includes('')) {
+                resultContainer.textContent = 'It\'s a Draw!';
+                gameActive = false;
+            }
+        }
+
+        function makeMove(row, col) {
+            if (gameBoard[row * 3 + col] === '' && gameActive) {
+                gameBoard[row * 3 + col] = currentPlayer;
+                buttons[row * 3 + col].textContent = currentPlayer;
+                buttons[row * 3 + col].classList.add('btn-disabled');
+                checkWinner();
+                if (gameActive) {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    resultContainer.textContent = `Player ${currentPlayer}'s Turn`;
+                }
+            }
+        }
+
+        function resetGame() {
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            resultContainer.textContent = `Player ${currentPlayer}'s Turn`;
+            buttons.forEach((button) => {
+                button.textContent = '';
+                button.classList.remove('btn-disabled');
+            });
+        }
+    </script>
+</body>
+</html>
